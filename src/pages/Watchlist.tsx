@@ -1,6 +1,6 @@
 // src/pages/Watchlist.tsx
 import MovieCard from "../components/MovieCard/MovieCard";
-import { useWatchlist } from "../context/WatchlistContext";
+import { useWatchlist } from "../contexts/WatchlistContext";
 
 const Watchlist = () => {
   const { watchlist } = useWatchlist();

@@ -1,33 +1,29 @@
-// src/pages/Home.tsx
 import { useEffect, useState } from "react";
+import HeroBanner from "../components/HeroBanner/HeroBanner";
+import MovieRow from "../components/MovieRow/MovieRow";
 import { tmdbApi } from "../services/tmdbApi";
-import { Movie } from "../types/movie";
-import MovieCard from "../components/MovieCard/MovieCard";
-import SearchBar from "../components/SearchBar/SearchBar";
 
 const Home = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [trending, setTrending] = useState([]);
+  const [popular, setPopular] = useState([]);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      const data = await tmdbApi.getTrendingMovies();
-      setMovies(data.results);
-    };
-
-    fetchMovies();
+    tmdbApi.getTrendingMovies().then(res => setTrending(res.results));
+    tmdbApi.getPopularMovies().then(res => setPopular(res.results));
   }, []);
 
   return (
-    <div>
-      <SearchBar />
+    <div className="min-h-screen">
 
-      <h1>Latest Movies</h1>
+      <HeroBanner />
 
-      <div className="movie-grid">
-        {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-16">
+        
+        <MovieRow title="🔥 Trending" movies={trending} />
+        <MovieRow title="⭐ Popular" movies={popular} />
+
       </div>
+
     </div>
   );
 };

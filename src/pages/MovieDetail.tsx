@@ -1,50 +1,45 @@
-// src/pages/MovieDetail.tsx
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { tmdbApi } from "../services/tmdbApi";
+import { useEffect, useState } from "react";
+import { getMovieDetail } from "../services/api";
+
+const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 
 const MovieDetail = () => {
-  const { id } = useParams();
-
+  const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<any>(null);
-  const [cast, setCast] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchMovie = async () => {
-      if (!id) return;
-
-      const movieData = await tmdbApi.getMovieDetails(id);
-      const castData = await tmdbApi.getMovieCredits(id);
-
-      setMovie(movieData);
-      setCast(castData.cast.slice(0, 10));
-    };
-
-    fetchMovie();
+    if (id) {
+      getMovieDetail(id).then(setMovie);
+    }
   }, [id]);
 
-  if (!movie) return <div>Loading...</div>;
+  if (!movie) {
+    return <p className="text-white p-6">Loading...</p>;
+  }
 
   return (
-    <div className="movie-detail">
+    <div className="p-6 text-white">
+      <h1 className="text-3xl font-bold mb-4">
+        {movie.title}
+      </h1>
+
       <img
-        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-        alt={movie.title}
+        className="rounded-xl mb-6"
+        src={IMAGE_URL + movie.poster_path}
       />
 
-      <h1>{movie.title}</h1>
-      <p>{movie.overview}</p>
-      <p>⭐ {movie.vote_average}</p>
+      <p className="text-gray-300 mb-6">
+        {movie.overview}
+      </p>
 
-      <h2>Actors</h2>
+      <h3 className="text-xl font-semibold mb-2">
+        🎭 Cast:
+      </h3>
 
-      <ul>
-        {cast.map((actor) => (
-          <li key={actor.id}>
-            {actor.name} as {actor.character}
-          </li>
-        ))}
-      </ul>
+      {movie.credits?.cast?.slice(0, 5).map((actor: any) => (
+        <p key={actor.id}>{actor.name}</p>
+      ))}
     </div>
   );
 };

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #020617;
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+}
+
+body {
+  background: radial-gradient(circle at top, #020617, #000);
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+/* scroll hidden tapi smooth */
+::-webkit-scrollbar {
+  display: none;
+}
