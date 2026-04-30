@@ -1,0 +1,9 @@
+# Keamanan
+.env
+
+# Dependencies
+node_modules/
+
+# File log atau sistem (opsional)
+npm-debug.log*
+.DS_Store
