@@ -2,17 +2,190 @@
 
 :root {
   --bg: #020617;
-  --card: rgba(255,255,255,0.05);
-  --border: rgba(255,255,255,0.1);
+  --bg-secondary: #030712;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-hover: rgba(255, 255, 255, 0.12);
+  --border: rgba(255, 255, 255, 0.08);
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+  --accent: #ef4444;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: radial-gradient(circle at top, #020617, #000);
-  color: white;
-  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(circle at top center, rgba(30, 41, 59, 0.45), transparent 40%),
+    linear-gradient(to bottom, #020617 0%, #000814 40%, #000000 100%);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
 }
 
-/* scroll hidden tapi smooth */
+/* Global reset */
+* {
+  box-sizing: border-box;
+}
+
+/* Hide scrollbar but keep scroll */
 ::-webkit-scrollbar {
-  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Main wrapper */
+main {
+  width: 100%;
+  position: relative;
+  z-index: 20;
+}
+
+/* Movie Sections */
+.movie-section {
+  padding: 80px clamp(20px, 5vw, 100px);
+  position: relative;
+}
+
+.movie-section h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+/* Grid fallback */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px;
+}
+
+/* Movie Card */
+.movie-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  backdrop-filter: blur(12px);
+}
+
+.movie-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(239, 68, 68, 0.12);
+}
+
+/* Poster */
+.movie-poster {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+}
+
+/* Info */
+.movie-info {
+  padding: 18px;
+}
+
+.movie-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.movie-release {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Glass utility */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Buttons */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+/* Images */
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .movie-section {
+    padding: 70px 40px;
+  }
+
+  .movie-poster {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .movie-section {
+    padding: 60px 20px;
+  }
+
+  .movie-section h2 {
+    font-size: 2rem;
+  }
+
+  .movie-poster {
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-section {
+    padding: 50px 16px;
+  }
+
+  .movie-poster {
+    height: 250px;
+  }
+
+  .movie-title {
+    font-size: 1rem;
+  }
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }

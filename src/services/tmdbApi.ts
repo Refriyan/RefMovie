@@ -1,36 +1,58 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
-const fetchData = async (endpoint: string) => {
-    const separator = endpoint.includes("?") ? "&" : "?";
+const fetchFromTMDB = async (endpoint: string) => {
+  const response = await fetch(
+    `${BASE_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
+  );
 
-    const response = await fetch(
-        `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}&language=en-US`
-    );
+  if (!response.ok) {
+    throw new Error("Failed to fetch TMDB data");
+  }
 
-    if (!response.ok) {
-        throw new Error("Failed to fetch TMDB data");
-    }
-
-    return response.json();
+  const data = await response.json();
+  return data.results || data;
 };
 
-export const tmdbApi = {
-    getTrendingMovies: (page = 1) =>
-        fetchData(`/trending/movie/week?page=${page}`),
+export const getTrendingMovies = async () => {
+  return fetchFromTMDB("/trending/movie/week");
+};
 
-    getPopularMovies: (page = 1) =>
-        fetchData(`/movie/popular?page=${page}`),
+export const getPopularMovies = async () => {
+  return fetchFromTMDB("/movie/popular");
+};
 
-    getNowPlayingMovies: (page = 1) =>
-        fetchData(`/movie/now_playing?page=${page}`),
+export const getTopRatedMovies = async () => {
+  return fetchFromTMDB("/movie/top_rated");
+};
 
-    getMovieDetails: (id: string) =>
-        fetchData(`/movie/${id}`),
+export const getUpcomingMovies = async () => {
+  return fetchFromTMDB("/movie/upcoming");
+};
 
-    getMovieCredits: (id: string) =>
-        fetchData(`/movie/${id}/credits`),
+export const searchMovies = async (query: string) => {
+  const response = await fetch(
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(
+      query
+    )}`
+  );
 
-    searchMovies: (query: string, page = 1) =>
-        fetchData(`/search/movie?query=${encodeURIComponent(query)}&page=${page}`)
+  if (!response.ok) {
+    throw new Error("Search failed");
+  }
+
+  const data = await response.json();
+  return data.results;
+};
+
+export const getMovieDetails = async (id: string) => {
+  const response = await fetch(
+    `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US&append_to_response=credits,videos`
+  );
+
+  if (!response.ok) {
+    throw new Error("Movie detail fetch failed");
+  }
+
+  return response.json();
 };

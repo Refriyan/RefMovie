@@ -1,17 +1,23 @@
+import { Movie } from "../../types/movie";
 import MovieCard from "../MovieCard/MovieCard";
 
-const MovieRow = ({ title, movies }: any) => {
-  return (
-    <div className="mb-12">
-      <h2 className="text-2xl font-semibold mb-5">{title}</h2>
+interface Props {
+  title: string;
+  movies: Movie[];
+}
 
-      <div className="flex gap-6 overflow-x-auto pb-4">
-        {movies.map((movie: any) => (
+function MovieRow({ title, movies }: Props) {
+  return (
+    <section className="px-4 md:px-8 lg:px-16">
+      <h2 className="text-xl md:text-2xl font-bold mb-4">{title}</h2>
+
+      <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+        {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
-    </div>
+    </section>
   );
-};
+}
 
 export default MovieRow;

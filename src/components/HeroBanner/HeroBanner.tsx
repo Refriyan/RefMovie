@@ -1,62 +1,57 @@
-import { useEffect, useState } from "react";
-import { tmdbApi } from "../../services/tmdbApi";
-import { motion } from "framer-motion";
+import { Movie } from "../../types/movie";
 
-const IMAGE_URL = "https://image.tmdb.org/t/p/original";
+interface Props {
+  movie: Movie;
+}
 
-const HeroBanner = () => {
-  const [movie, setMovie] = useState<any>(null);
-
-  useEffect(() => {
-    tmdbApi.getTrendingMovies().then((data) => {
-      setMovie(data.results[0]);
-    });
-  }, []);
-
-  if (!movie) return null;
+function HeroBanner({ movie }: Props) {
+  const backdrop = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+    : "https://via.placeholder.com/1920x1080?text=No+Backdrop";
 
   return (
-    <div className="relative h-[75vh] w-full overflow-hidden">
-      {/* BACKDROP */}
-      <motion.img
-        src={IMAGE_URL + movie.backdrop_path}
-        className="absolute w-full h-full object-cover scale-110"
-        initial={{ scale: 1.2 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.5 }}
-      />
+    <section
+      className="relative min-h-screen w-full bg-cover bg-center flex items-end"
+      style={{ backgroundImage: `url(${backdrop})` }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-transparent" />
 
-      {/* DARK GRADIENT */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/60 to-transparent" />
+      {/* Bottom fade */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
 
-      {/* GLOW EFFECT */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.08),transparent)]" />
+      {/* Content */}
+      <div className="absolute bottom-24 md:bottom-36 left-6 sm:left-10 md:left-16 lg:left-24 max-w-3xl z-10">
+        <p className="text-red-500 font-semibold mb-3 uppercase tracking-[0.3em] text-sm md:text-base">
+          Featured Movie
+        </p>
 
-      {/* CONTENT */}
-      <motion.div
-        className="relative z-10 px-6 md:px-16 h-full flex flex-col justify-end pb-16 max-w-2xl"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-tight">
           {movie.title}
         </h1>
 
-        <p className="text-gray-300 mt-4 line-clamp-3">{movie.overview}</p>
+        <div className="flex flex-wrap gap-4 md:gap-6 text-sm md:text-lg text-gray-300 mb-6">
+          <span>⭐ {movie.vote_average?.toFixed(1)}</span>
+          <span>📅 {movie.release_date}</span>
+          <span>🔥 Popular</span>
+        </div>
 
-        <div className="flex gap-4 mt-6">
-          <button className="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:scale-105 transition">
-            ▶ Play
+        <p className="text-sm sm:text-base md:text-xl text-gray-200 leading-relaxed line-clamp-3 mb-8 max-w-xl">
+          {movie.overview}
+        </p>
+
+        <div className="flex flex-wrap gap-4">
+          <button className="bg-red-600 hover:bg-red-700 px-8 py-4 rounded-xl font-bold text-base md:text-lg shadow-lg transition">
+            ▶ Watch Now
           </button>
 
-          <button className="bg-white/10 backdrop-blur px-6 py-2 rounded-lg border border-white/20 hover:bg-white/20 transition">
+          <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 px-8 py-4 rounded-xl font-bold text-base md:text-lg transition">
             + Watchlist
           </button>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
-};
+}
 
 export default HeroBanner;
