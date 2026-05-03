@@ -1,67 +1,50 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { WatchlistMovie } from "../types/movie";
 
 interface WatchlistContextType {
-  watchlist: any[];
-  addToWatchlist: (movie: any) => void;
+  watchlist: WatchlistMovie[];
+  addToWatchlist:      (movie: WatchlistMovie) => void;
   removeFromWatchlist: (id: number) => void;
-  isInWatchlist: (id: number) => boolean;
+  isInWatchlist:       (id: number) => boolean;
+  toggleWatchlist:     (movie: WatchlistMovie) => void;
 }
 
-const WatchlistContext = createContext<WatchlistContextType | undefined>(
-  undefined,
-);
+const WatchlistContext = createContext<WatchlistContextType | undefined>(undefined);
 
 export const WatchlistProvider = ({ children }: { children: ReactNode }) => {
-  const [watchlist, setWatchlist] = useState<any[]>(() => {
-    const saved = localStorage.getItem("refmovie_watchlist");
-    return saved ? JSON.parse(saved) : [];
+  const [watchlist, setWatchlist] = useState<WatchlistMovie[]>(() => {
+    try { return JSON.parse(localStorage.getItem("cv_watchlist") || "[]"); }
+    catch { return []; }
   });
 
   useEffect(() => {
-    localStorage.setItem("refmovie_watchlist", JSON.stringify(watchlist));
+    localStorage.setItem("cv_watchlist", JSON.stringify(watchlist));
   }, [watchlist]);
 
-  const addToWatchlist = (movie: any) => {
-    setWatchlist((prev) => {
-      if (prev.some((m) => m.id === movie.id)) return prev;
-      return [...prev, movie];
-    });
+  const addToWatchlist = (movie: WatchlistMovie) => {
+    setWatchlist(prev => prev.find(m => m.id === movie.id) ? prev : [movie, ...prev]);
   };
 
   const removeFromWatchlist = (id: number) => {
-    setWatchlist((prev) => prev.filter((m) => m.id !== id));
+    setWatchlist(prev => prev.filter(m => m.id !== id));
   };
 
-  const isInWatchlist = (id: number) => {
-    return watchlist.some((m) => m.id === id);
+  const isInWatchlist = (id: number) => watchlist.some(m => m.id === id);
+
+  const toggleWatchlist = (movie: WatchlistMovie) => {
+    if (isInWatchlist(movie.id)) removeFromWatchlist(movie.id);
+    else addToWatchlist(movie);
   };
 
   return (
-    <WatchlistContext.Provider
-      value={{
-        watchlist,
-        addToWatchlist,
-        removeFromWatchlist,
-        isInWatchlist,
-      }}
-    >
+    <WatchlistContext.Provider value={{ watchlist, addToWatchlist, removeFromWatchlist, isInWatchlist, toggleWatchlist }}>
       {children}
     </WatchlistContext.Provider>
   );
 };
 
 export const useWatchlist = () => {
-  const context = useContext(WatchlistContext);
-
-  if (!context) {
-    throw new Error("useWatchlist must be used within WatchlistProvider");
-  }
-
-  return context;
+  const ctx = useContext(WatchlistContext);
+  if (!ctx) throw new Error("useWatchlist must be used inside WatchlistProvider");
+  return ctx;
 };

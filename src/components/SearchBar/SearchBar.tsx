@@ -1,40 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
 
-function SearchBar() {
+const SearchBar = ({ placeholder = "Search movies..." }: { placeholder?: string }) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!query.trim()) return;
-
-    navigate(`/search?q=${encodeURIComponent(query)}`);
-    setQuery("");
+    if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
   return (
-    <form
-      onSubmit={handleSearch}
-      className="flex items-center w-full gap-2"
-    >
-      <input
-        type="text"
-        placeholder="Search movies..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="flex-1 px-4 py-3 rounded-xl bg-slate-900/80 text-white placeholder-gray-400 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
-      />
-
-      <button
-        type="submit"
-        className="bg-red-600 hover:bg-red-700 px-4 md:px-5 py-3 rounded-xl font-semibold transition whitespace-nowrap"
-      >
+    <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8, marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", flex: 1, alignItems: "center", gap: 8, background: "var(--black3)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 14px" }}>
+        <FiSearch size={14} color="var(--text3)" />
+        <input
+          value={query} onChange={e => setQuery(e.target.value)}
+          placeholder={placeholder}
+          style={{ background: "transparent", border: "none", outline: "none", color: "var(--text)", fontSize: 14, flex: 1 }}
+        />
+      </div>
+      <button type="submit" style={{ background: "var(--maroon)", color: "#fff", border: "none", padding: "9px 20px", borderRadius: 8, fontSize: 13, fontWeight: 500, cursor: "pointer" }}>
         Search
       </button>
     </form>
   );
-}
+};
 
 export default SearchBar;

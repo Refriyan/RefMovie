@@ -1,0 +1,18 @@
+RefMovie Clean Install Guide
+
+1. Install dependencies:
+   npm install
+
+2. Setup environment:
+   Copy .env.example to .env
+   Add your TMDB API key
+
+3. Run development server:
+   npm run dev
+
+4. Production build:
+   npm run build
+
+Recommended cleanup if dependency issues occur:
+   rm -rf node_modules package-lock.json
+   npm install

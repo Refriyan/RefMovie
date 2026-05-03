@@ -1,46 +1,104 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { searchMovies } from "../services/tmdbApi";
+import { FiSearch } from "react-icons/fi";
+import { tmdbApi } from "../services/tmdbApi";
 import MovieCard from "../components/MovieCard/MovieCard";
-import Navbar from "../components/Navbar/Navbar";
+import Skeleton from "../components/Skeleton/Skeleton";
+import type { Movie } from "../types/movie";
 
 const SearchResults = () => {
-  const [movies, setMovies] = useState<any[]>([]);
-  const query = new URLSearchParams(useLocation().search).get("q");
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [totalResults, setTotalResults] = useState(0);
+  const query = new URLSearchParams(useLocation().search).get("q") || "";
 
   useEffect(() => {
-    const fetchResults = async () => {
-      if (!query) return;
-
-      try {
-        const data = await searchMovies(query);
-        setMovies(data);
-      } catch (error) {
-        console.error("Search failed:", error);
-      }
-    };
-
-    fetchResults();
+    if (!query.trim()) return;
+    setLoading(true);
+    setMovies([]);
+    tmdbApi.searchMovies(query).then((data) => {
+      setMovies(data.results || []);
+      setTotalResults(data.total_results || 0);
+      setLoading(false);
+    });
   }, [query]);
 
   return (
-    <div className="bg-slate-950 min-h-screen text-white">
-      <Navbar />
-
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 pt-32 pb-20">
-        <h1 className="text-2xl md:text-4xl font-bold mb-8">
-          Search Results for:{" "}
-          <span className="text-red-500">{query}</span>
-        </h1>
-
-        {movies.length === 0 ? (
-          <p className="text-gray-400 text-lg">
-            No movies found.
+    <div
+      className="page-enter"
+      style={{ paddingTop: "var(--nav-h)", minHeight: "100vh" }}
+    >
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "1.5rem 1rem" }}>
+        <div style={{ marginBottom: "1.25rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 5,
+            }}
+          >
+            <div
+              style={{
+                width: 3,
+                height: 18,
+                background: "#b8001e",
+                borderRadius: 2,
+              }}
+            />
+            <h1
+              style={{
+                fontFamily: "'Playfair Display',serif",
+                fontSize: "clamp(1.1rem,4vw,1.4rem)",
+                fontWeight: 700,
+                color: "var(--text)",
+              }}
+            >
+              Search Results
+            </h1>
+          </div>
+          <p style={{ fontSize: 12, color: "var(--text3)", paddingLeft: 11 }}>
+            {loading ? (
+              "Searching..."
+            ) : (
+              <>
+                {totalResults.toLocaleString()} results for{" "}
+                <strong style={{ color: "var(--maroon-light)" }}>
+                  "{query}"
+                </strong>
+              </>
+            )}
           </p>
+        </div>
+
+        {loading ? (
+          <div className="movie-grid-responsive">
+            <Skeleton count={12} />
+          </div>
+        ) : movies.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "4rem 1rem" }}>
+            <FiSearch
+              size={40}
+              color="var(--text3)"
+              style={{ margin: "0 auto 1rem" }}
+            />
+            <p
+              style={{
+                color: "var(--text2)",
+                fontWeight: 500,
+                marginBottom: 6,
+              }}
+            >
+              No results found
+            </p>
+            <p style={{ color: "var(--text3)", fontSize: 13 }}>
+              Try a different keyword
+            </p>
+          </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
+          <div className="movie-grid-responsive">
+            {movies.map((m) => (
+              <MovieCard key={m.id} movie={m} showBadge />
             ))}
           </div>
         )}

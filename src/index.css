@@ -1,191 +1,154 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── CSS VARIABLES ── */
 :root {
-  --bg: #020617;
-  --bg-secondary: #030712;
-  --card: rgba(255, 255, 255, 0.06);
-  --card-hover: rgba(255, 255, 255, 0.12);
-  --border: rgba(255, 255, 255, 0.08);
-  --text-main: #ffffff;
-  --text-muted: #cbd5e1;
-  --accent: #ef4444;
+  --black: #0a0a0a;
+  --black2: #111111;
+  --black3: #1a1a1a;
+  --black4: #242424;
+  --maroon: #7a0012;
+  --maroon2: #9b0017;
+  --maroon3: #b8001e;
+  --maroon-light: #c94a5e;
+  --gold: #e8b86d;
+  --text: #f0ece8;
+  --text2: #b0a89e;
+  --text3: #6e6660;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-maroon: rgba(122, 0, 18, 0.4);
+  --nav-h: 62px;
 }
 
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
+/* ── BASE ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+}
+
+html {
   scroll-behavior: smooth;
 }
 
 body {
-  background:
-    radial-gradient(circle at top center, rgba(30, 41, 59, 0.45), transparent 40%),
-    linear-gradient(to bottom, #020617 0%, #000814 40%, #000000 100%);
-  color: var(--text-main);
-  font-family: "Inter", sans-serif;
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Global reset */
-* {
-  box-sizing: border-box;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Hide scrollbar but keep scroll */
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-/* Firefox */
-html {
-  scrollbar-width: none;
-}
-
-/* Main wrapper */
-main {
-  width: 100%;
-  position: relative;
-  z-index: 20;
-}
-
-/* Movie Sections */
-.movie-section {
-  padding: 80px clamp(20px, 5vw, 100px);
-  position: relative;
-}
-
-.movie-section h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 800;
-  margin-bottom: 2rem;
-  letter-spacing: -0.02em;
-}
-
-/* Grid fallback */
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 28px;
-}
-
-/* Movie Card */
-.movie-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: pointer;
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    border-color 0.35s ease;
-  backdrop-filter: blur(12px);
-}
-
-.movie-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow:
-    0 20px 50px rgba(0, 0, 0, 0.45),
-    0 0 20px rgba(239, 68, 68, 0.12);
-}
-
-/* Poster */
-.movie-poster {
-  width: 100%;
-  height: 340px;
-  object-fit: cover;
-}
-
-/* Info */
-.movie-info {
-  padding: 18px;
-}
-
-.movie-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.movie-release {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-/* Glass utility */
-.glass {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Buttons */
-button {
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-}
-
-/* Images */
 img {
-  user-select: none;
-  -webkit-user-drag: none;
+  max-width: 100%;
+  display: block;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .movie-section {
-    padding: 70px 40px;
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--black4);
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--maroon);
+  color: #fff;
+}
+
+/* ── SKELETON ── */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
   }
 
-  .movie-poster {
-    height: 300px;
+  100% {
+    background-position: -200% 0;
   }
 }
 
-@media (max-width: 768px) {
-  .movie-section {
-    padding: 60px 20px;
+.skeleton-pulse {
+  background: linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── PAGE FADE ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 
-  .movie-section h2 {
-    font-size: 2rem;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  .movie-poster {
-    height: 280px;
-  }
+.page-enter {
+  animation: fade-up 0.3s ease forwards;
+}
+
+/* ── RESPONSIVE GRID ── */
+.movie-grid-responsive {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding-bottom: 2rem;
 }
 
 @media (max-width: 480px) {
-  .movie-section {
-    padding: 50px 16px;
-  }
-
-  .movie-poster {
-    height: 250px;
-  }
-
-  .movie-title {
-    font-size: 1rem;
+  .movie-grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }
 
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+@media (min-width: 768px) {
+  .movie-grid-responsive {
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* ── HORIZONTAL SCROLL ── */
+.h-scroll-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--black4) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.h-scroll-row::-webkit-scrollbar {
+  height: 3px;
 }
