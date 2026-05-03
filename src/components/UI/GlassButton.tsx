@@ -1,5 +1,3 @@
-// src/components/UI/GlassButton.tsx
-
 import { ReactNode } from "react";
 
 interface GlassButtonProps {

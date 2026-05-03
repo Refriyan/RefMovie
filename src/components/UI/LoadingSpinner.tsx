@@ -1,5 +1,3 @@
-// src/components/UI/LoadingSpinner.tsx
-
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   text?: string;

@@ -1,5 +1,3 @@
-// src/components/UI/SectionHeader.tsx
-
 interface SectionHeaderProps {
   title: string;
   subtitle?: string;
