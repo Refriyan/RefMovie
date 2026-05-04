@@ -38,7 +38,7 @@ const Register = () => {
 
         <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
           <Link to="/" style={{ fontFamily: "'Playfair Display',serif", fontSize: "1.6rem", fontWeight: 900, color: "var(--text)" }}>
-            Cinema<span style={{ color: "#b8001e" }}>Vault</span>
+            Refriyan<span style={{ color: "#b8001e" }}>Movie</span>
           </Link>
           <p style={{ fontSize: 13, color: "var(--text3)", marginTop: 4 }}>Create your free account</p>
         </div>
